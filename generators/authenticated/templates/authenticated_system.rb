@@ -5,7 +5,13 @@ module AuthenticatedSystem
     def logged_in?
       !!current_<%= file_name %>
     end
-
+    
+    def admin_logged_in?
+      if logged_in?
+        current_<%= file_name %>.administrator
+      end
+    end
+    
     # Accesses the current <%= file_name %> from the session.
     # Future calls avoid the database because nil is not equal to false.
     def current_<%= file_name %>
@@ -34,6 +40,14 @@ module AuthenticatedSystem
     def authorized?(action = action_name, resource = nil)
       logged_in?
     end
+    
+    def admin_authorized?
+      if logged_in?
+        current_<% file_name %>.administrator
+      else
+        return false
+      end
+    end
 
     # Filter method to enforce a login requirement.
     #
@@ -52,6 +66,10 @@ module AuthenticatedSystem
     def login_required
       authorized? || access_denied
     end
+    
+    def admin_required
+      admin_authorized? || admin_access_denied
+    end
 
     # Redirect as appropriate when an access request fails.
     #
@@ -65,6 +83,7 @@ module AuthenticatedSystem
       respond_to do |format|
         format.html do
           store_location
+          flash[:error] = "Sorry, you must be logged in to view that page."
           redirect_to new_<%= controller_routing_name %>_path
         end
         # format.any doesn't work in rails version < http://dev.rubyonrails.org/changeset/8987
@@ -72,6 +91,21 @@ module AuthenticatedSystem
         # the 'format.any' block incorrectly. See http://bit.ly/ie6_borken or http://bit.ly/ie6_borken2
         # for a workaround.)
         format.any(:json, :xml) do
+          request_http_basic_authentication 'Web Password'
+        end
+      end
+    end
+    
+    def admin_access_denied
+      respond_to do |format|
+        format.html do
+          store_location
+          flash[:error] = "Sorry, only site administrators can view that page."
+          redirect_back_or_default(new_<%= controller_routing_name %>_path)
+        end
+        # format.any doesn't work in rails version < http://dev.rubyonrails.org/changeset/8987
+        # you may want to change format.any to e.g. format.any(:js, :xml)
+        format.any do
           request_http_basic_authentication 'Web Password'
         end
       end
