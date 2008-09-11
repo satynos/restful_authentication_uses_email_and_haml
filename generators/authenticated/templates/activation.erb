@@ -1,3 +1,7 @@
-<%%=h @<%= file_name %>.login %>, your account has been activated.  Welcome aboard!
-
+<%% if <%= file_name %>.name %> -%>
+  <%%=h @<%= file_name %>.name %>
+<%% else -%>
+  <%%=h @<%= file_name %>.email %>
+<%% end -%>
+, your account has been activated.  Welcome aboard!
   <%%=h @url %>
