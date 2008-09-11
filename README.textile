@@ -1,3 +1,19 @@
+  http://www.gamutworks.net
+  
+  As mentioned in the description, this is a clone of Rick Olsen's brilliant Restful_Authentication
+  modified to use email rather than login (for those apps where you don't want your users to have
+  to enter a unique login id). Me, being the haml addict that I am, also converted the views to haml.
+  
+  I've also included a new authenticated method (found in lib/authenitcated_system.rb) that will be
+  available in all views called admin_autherized? to check if an administrator is logged in, and
+  another method called admin_required to add as a before_filter in your controllers. Both of these
+  are dependent on first creating a new boolean column in the migration for the user table called
+  administrator. (I will probably add that to this plugin at a later date.)
+  
+  Generating is exactly the same as before, so please follow Ricks readme for all the details
+
+
+
 h1. "Restful Authentication Generator":http://github.com/technoweenie/restful-authentication
 
 This widely-used plugin provides a foundation for securely managing user
