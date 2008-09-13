@@ -45,7 +45,7 @@ module <%= model_controller_class_name %>Helper
   #
   def link_to_<%= file_name %>(<%= file_name %>, options={})
     raise "Invalid <%= file_name %>" unless <%= file_name %>
-    options.reverse_merge! :content_method => :login, :title_method => :login, :class => :nickname
+    options.reverse_merge! :content_method => :email, :title_method => :email, :class => :nickname
     content_text      = options.delete(:content_text)
     content_text    ||= <%= file_name %>.send(options.delete(:content_method))
     options[:title] ||= <%= file_name %>.send(options.delete(:title_method))
